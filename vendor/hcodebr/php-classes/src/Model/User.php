@@ -74,7 +74,7 @@ class User extends Model{
 
         $sql = new Sql();
 
-        $reuslt = $sql->select("CALL sp_users_save(:desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)", [
+        $result = $sql->select("CALL sp_users_save(:desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)", [
             ":desperson" => $this->getdesperson(),
             ":deslogin" => $this->getdeslogin(),
             ":despassword" => $this->getdespassword(),
@@ -83,7 +83,7 @@ class User extends Model{
             ":inadmin" => $this->getinadmin()
         ]);
 
-        $this->setData($reuslt[0]);
+        $this->setData($result[0]);
 
     }
 
@@ -96,6 +96,7 @@ class User extends Model{
         ]);
 
         $this->setData($results[0]);
+        
     }
 
     public function update(){
