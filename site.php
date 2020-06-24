@@ -163,7 +163,9 @@ $app->get("/login", function(){
 	$page = new Page();
 
 	$page->setTpl("login", [
-		"error" => User::getMsgError()
+		"error" => User::getMsgError(),
+		"errorRegister" => User::getRegisterError(),
+		"registerValues" => (isset($_SESSION["registerValues"])) ? $_SESSION["registerValues"] : ['name' => '', 'email' => '', 'phone' => '']
 	]);
 
 });
@@ -192,6 +194,66 @@ $app->get("/logout", function(){
 	User::logout();
 
 	header("Location: /login");
+	exit;
+
+});
+
+$app->post("/register", function() {
+
+	$_SESSION["registerValues"] = $_POST;
+
+	if (!isset($_POST['name']) || $_POST['name'] == '') {
+
+		User::setRegisterError("Preencha o seu nome");
+
+		header("Location: /login");
+		exit;
+
+	}
+
+	if (!isset($_POST['email']) || $_POST['email'] == '') {
+
+		User::setRegisterError("Preencha o seu email");
+
+		header("Location: /login");
+		exit;
+
+	}
+
+	if (!isset($_POST['password']) || $_POST['password'] == '') {
+
+		User::setRegisterError("Preencha o sua senha");
+
+		header("Location: /login");
+		exit;
+
+	}
+
+	if (User::checkLoginExist($_POST['email']) === true){
+
+		User::setRegisterError("Endereço de email já cadastrado");
+
+		header("Location: /login");
+		exit;
+
+	}
+
+	$user = new User();
+
+	$user->setData([
+		"inadmin" => 0,
+		"deslogin" => $_POST["email"],
+		"despassword" => $_POST["password"],
+		"desperson" => $_POST["name"],
+		"desemail" => $_POST["email"],
+		"nrphone" => $_POST["phone"]
+	]);
+
+	$user->save();
+
+	User::login($_POST['email'], $_POST['password']);
+
+	header('Location: /checkout');
 	exit;
 
 });
