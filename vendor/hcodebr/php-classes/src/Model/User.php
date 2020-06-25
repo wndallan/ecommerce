@@ -63,7 +63,7 @@ class User extends Model{
 
         if (count($results) === 0){
 
-            throw new \Exception("Usuário inexistente ou senha inválida");
+            User::setMsgError("Usuário inexistente ou senha inválida");
             
         }
 
@@ -81,7 +81,7 @@ class User extends Model{
 
         } else {
 
-            throw new \Exception("Usuário inexistente ou senha inválida");
+            User::setMsgError("Usuário inexistente ou senha inválida");
 
         }
 
