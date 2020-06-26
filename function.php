@@ -11,6 +11,12 @@ function formatPrice($vlprice){
 
 }
 
+function formatDate($date){
+
+    return date('d/m/Y', strtotime($date));
+
+}
+
 function checkLogin($inadmin = true){
 
     return User::checkLogin($inadmin);
@@ -37,11 +43,18 @@ function getCartNrQtd() {
 
 function getCartVlSubTotal() {
 
-    $cart = Cart::getFromSession();
+    try {
 
-    $total = $cart->getProductsTotals();
+        $cart = Cart::getFromSession();
+        $total = $cart->getProductsTotals();
+        
+        return formatPrice($total['vlprice']);
 
-    return formatPrice($total['vlprice']);
+    } catch (\Throwable $th) {
+        
+        return formatPrice("0");
+
+    }
 
 }
 
