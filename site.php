@@ -266,8 +266,28 @@ $app->post("/checkout", function(){
 
 	$order->save();
 
-	header("Location: /order/".$order->getidorder());
+	header("Location: /orders/".$order->getidorder()."/paypal");
 	exit;
+
+});
+
+$app->get("/orders/:idorder/paypal", function($idorder){
+
+	User::verifyLogin(false);
+
+	$order = new Order();
+
+	$order->get((int)$idorder);
+
+	$cart = $order->getCart();
+
+	$page = new Page();
+
+	$page->setTpl("payment-paypal", [
+		"order" => $order->getValues(),
+		"cart" => $cart->getValues(),
+		"products" => $cart->getProducts()
+	]);
 
 });
 
